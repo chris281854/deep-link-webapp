@@ -21,9 +21,25 @@ app.use((req, res, next) => {
 // Servir archivos estáticos
 app.use(express.static(__dirname));
 
+// Ruta OPTIONS para CORS
+app.options('/.well-known/assetlinks.json', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(200).end();
+});
+
 // Ruta específica para assetlinks.json
 app.get('/.well-known/assetlinks.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  
+  // Log para debugging
+  console.log('Assetlinks.json requested');
+  
   res.sendFile(path.join(__dirname, '.well-known', 'assetlinks.json'));
 });
 
